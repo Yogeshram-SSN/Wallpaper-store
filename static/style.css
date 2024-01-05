@@ -1,0 +1,56 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url("https://assets-news.housing.com/news/wp-content/uploads/2022/04/07005612/WALLPAPER-DESIGN-FOR-BEDROOM-FEATURE-compressed.jpg");
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.login_header {
+    font-size: 40px;
+    margin: 5px;
+    color: #333;
+}
+
+.userid,
+.password,
+.fullname,
+.email,
+.phone,
+.address {
+    margin: 12px;
+    padding: 15px;
+    width: 250px;
+    display: block;
+}
+
+.login_button {
+    margin: 20px;
+    padding: 10px;
+    border-radius: 15px;
+    border: none;
+    background-color: rgb(53, 222, 89);
+    color: white;
+    width: 120px;
+    cursor: pointer;
+}
+
+.login_button:hover {
+    background-color: rgb(43, 182, 69);
+}
+
+.register {
+    margin: 10px;
+    color: #555;
+}

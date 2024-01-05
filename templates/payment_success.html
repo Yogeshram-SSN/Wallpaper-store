@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        div {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        img {
+            width: 100px;
+        }
+
+        h2 {
+            color: #1ac717; /* Green color for the header */
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Add a verification icon (you can customize this part) -->
+<div>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7gLke-uAFEeR0vuq8mN8Wc5kMLDsNn8TpiA&usqp=CAU" alt="Verification Icon">
+</div>
+
+<!-- Display the success message -->
+<div>
+    <h2>Payment Successful</h2>
+    <p>Your order has been placed successfully.</p>
+    <p><bold> ORDER ID:</bold>{{order_id}}</p>
+    <p>Expected delivery date is {{ delivery_date }}</p>
+    <p>Invoice No: {{invoice_no}}</p>
+    
+</div>
+
+</body>
+</html>

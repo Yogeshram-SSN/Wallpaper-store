@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        section#payment {
+            padding: 20px;
+        }
+
+        .payment-item {
+            display: flex;
+            border: 1px solid #ddd;
+            margin: 15px;
+            padding: 10px;
+        }
+
+        .payment-item img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .payment-item-details {
+            flex-grow: 1;
+        }
+
+        .total-price {
+            font-size: 18px;
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .proceed-to-checkout {
+            background-color: #1ac717;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        footer {
+            margin-top: 50px;
+            background-color: #000;
+            padding: 15px 0;
+            color: #FFF;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Wallpaper Store</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="wishlist.html">Wishlist</a></li>
+                <li><a href="#" onclick="showFilter()">Filter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="payment">
+        <h2>Payment Summary</h2>
+        <!-- Sample payment items, replace this with dynamic data from your backend -->
+        <div class="payment-item">
+            <img src="wallpaper1.jpg" alt="Wallpaper 1">
+            <div class="payment-item-details">
+                <h3>Wallpaper 1</h3>
+                <p>Material: Vinyl</p>
+                <p>Dimensions: 1920x1080</p>
+                <p>Quantity: 2</p>
+                <p>Price: $39.98</p>
+            </div>
+        </div>
+
+        <div class="payment-item">
+            <img src="wallpaper2.jpg" alt="Wallpaper 2">
+            <div class="payment-item-details">
+                <h3>Wallpaper 2</h3>
+                <p>Material: Fabric</p>
+                <p>Dimensions: 1280x720</p>
+                <p>Quantity: 1</p>
+                <p>Price: $29.99</p>
+            </div>
+        </div>
+
+        <div class="total-price">
+            <p>Total: $69.97</p>
+        </div>
+
+        <button onclick="proceedToCheckout()" class="proceed-to-checkout">Proceed to Checkout</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Wallpaper Store. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showFilter() {
+            const filterSection = document.getElementById('filter');
+            filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function proceedToCheckout() {
+            // Add logic to handle checkout
+            alert('Proceeding to Checkout!');
+        }
+    </script>
+
+</body>
+
+</html>

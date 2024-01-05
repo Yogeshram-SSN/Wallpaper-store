@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        section#cart {
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            border: 1px solid #ddd;
+            margin: 15px;
+            padding: 10px;
+        }
+
+        .cart-item img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .make-payment {
+            background-color: #1ac717;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        cart-item img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .total-price {
+            font-size: 18px;
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        footer {
+            margin-top: 50px;
+            background-color: #000;
+            padding: 15px 0;
+            color: #FFF;
+            text-align: center;
+        }
+        .remove-button {
+            background-color: #dd3333;
+            color: white;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Wallpaper Store</h1>
+        <nav>
+            <ul>
+                <li><a href="/user_home">Home</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/wish">Wishlist</a></li>
+                <li><a href="#" onclick="showFilter()">Filter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section id="cart">
+        <h2>Your Cart</h2>
+        
+        {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ base_url + item[0] + '.png' }}" alt="{{ item.product_name }}">
+                <div class="cart-item-details">
+                    <p>Product Name: {{ item[0] }}</p>
+                    <p>Wallpaper Dimension: {{ item[1] }}</p>
+                    <p>Quantity: {{ item[2] }}</p>
+                    <p>Price: {{ item[3] }}</p>
+                    
+                </div>
+                <button onclick="removeFromCart('{{ item[0] }}')" class="remove-button">Remove</button>
+            </div>
+        {% endfor %}
+    </section>
+    <div class="total-price">
+        <p>Total: ${{ total }}</p>
+
+    </div>
+    
+    
+
+    <div class="cart-buttons">
+        <button onclick="makePayment()" class="make-payment">Make Payment</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Wallpaper Store. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showFilter() {
+            const filterSection = document.getElementById('filter');
+            filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+        }
+    
+        function makePayment() {
+            // Add logic to handle payment
+            alert('Proceeding to Checkout!');
+            console.log('Making Payment...');
+            window.location.href = '/payment';
+        }
+    
+        function addToCart(productName) {
+            // Get the quantity value from the selected dropdown
+            const quantity = document.getElementById('quantity').value;
+        
+            // Send an AJAX request to the Flask backend to add the product to the cart
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'product': productName, 'quantity': quantity }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Add to Cart Response:', data);
+                if (data.success) {
+                    alert("Added ${quantity} ${productName}(s) to Cart!");
+                    // Update the total immediately after a successful addition
+                    updateTotal();
+                } else {
+                    alert('Failed to add to Cart. Check the console for details.');
+                    console.error('Failed to add to Cart:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add to Cart. Check the console for details.');
+            });
+        }
+        
+        
+    
+        function removeFromCart(productName) {
+            // Send an AJAX request to the Flask backend to remove the product from the cart
+            fetch('/remove_from_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product: productName,  // Updated property name to 'product'
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Remove from Cart Response:', data);
+                if (data.success) {
+                    // Assuming the server returns success: true if the removal is successful
+                    // Remove the item from the cart display
+                    const cartItem = document.querySelector(".cart-item img[alt='${productName}']");
+                    if (cartItem) {
+                        cartItem.closest('.cart-item').remove();
+                        alert('Item removed successfully!');
+                        // Update the total immediately after a successful removal
+                        updateTotal();
+                    }
+                } else {
+                    alert('Failed to remove item from cart. Check the console for details.');
+                    console.error('Failed to remove item from cart:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to remove item from cart. Check the console for details.');
+            });
+        }
+        
+        
+    
+        function updateTotal() {
+            // Recalculate the total amount
+            const cartItems = document.querySelectorAll('.cart-item');
+            let total_amount = 0;
+    
+            cartItems.forEach(cartItem => {
+                const quantity = parseInt(cartItem.querySelector('.cart-item-details p:nth-child(3)').textContent.split(' ')[1]);
+                const price = parseFloat(cartItem.querySelector('.cart-item-details p:nth-child(4)').textContent.split(' ')[1]);
+                total_amount += quantity * price;
+            });
+    
+            // Log the calculated total amount to the console for debugging
+            console.log('Total Amount:', total_amount);
+    
+            // Update the total amount on the page
+            document.querySelector('.total-price p').textContent = "Total: $${total_amount.toFixed(2)}";
+        }
+    </script>
+    
+
+
+
+
+
+</body>
+
+</html>

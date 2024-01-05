@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper Store</title>
+    <style>
+         body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        section#filter {
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        select, button {
+            margin: 5px;
+            padding: 5px;
+        }
+        section#products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+
+        .product {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #0dec0d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            height: 600px;
+        }
+
+        .product img {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-info h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .product-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .product button {
+            background-color: #dd9612;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 48%;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        select {
+            padding: 5px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+
+        footer {
+            margin-top: 50px;
+            background-color: #000;
+            padding: 15px 0;
+            color: #FFF;
+            text-align: center;
+        }
+
+        .footer-bottom {
+            font-style: italic;
+            text-align: center;
+            padding: 15px 0;
+        }section#products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Wallpaper Store</h1>
+    <nav>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/cart">Cart</a></li>
+            <li><a href="/wish">Wishlist</a></li>
+            <li><a href="#" onclick="showFilter()">Filter</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Filter Section -->
+<section id="filter" style="display: none;">
+    <label for="priceFilter">Filter by Price:</label>
+    <select id="priceFilter">
+        <option value="0-20">$0 - $20</option>
+        <option value="21-40">$21 - $40</option>
+        <option value="41-60">$41 - $60</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <label for="materialFilter">Filter by Material:</label>
+    <select id="materialFilter">
+        <option value="Vinyl">Vinyl</option>
+        <option value="Fabric">Fabric</option>
+        <option value="Paper">Paper</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <button onclick="applyFilters()">Apply Filters</button>
+</section>
+
+<section id="products">
+    {% for data in combined_data %}
+        <div class="product" data-price="{{ data[6] }}" data-material="{{ data[4] }}">
+            <!-- Use the image URL directly from the database -->
+
+            <img src="{{ base_url + data[2] }}" alt="{{ data[3] }}">
+
+            <div class="product-info">
+                <h2>{{ data[3] }}</h2>
+                <p>Material: {{ data[4] }}</p>
+                <p>Dimensions: {{ data[5] }}</p>
+                <p>Price: ${{ data[6] }}</p>
+                <p>Warranty: {{ data[1] }}</p>
+                <label for="quantity">Quantity:</label>
+                <select id="quantity_{{ data[3] }}" name="quantity" onchange="updateSelectedQuantity('{{ data[3] }}', this.value)">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <!-- Add more options as needed -->
+                </select>
+                <span id="selectedQuantity_{{ data[3] }}">Selected Quantity: 1</span>
+                <div class="product-buttons">
+                    <!-- Inside homepage.html -->
+                    <button onclick="addToCart('{{ data[3] }}', document.getElementById('quantity_{{ data[3] }}').value)">Add to Cart</button>
+                    <button onclick="addToWishlist('{{ data[3] }}')">Add to Wishlist</button>
+                </div>     
+            </div>
+        </div>
+    {% endfor %}
+</section>
+
+<script>
+    function addToCart(productName, quantity) {
+    console.log(productName, quantity);
+
+    // Send an AJAX request to the Flask backend to add the product to the cart
+    fetch('/add_to_cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ product: productName, quantity: quantity }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Added ${quantity} ${productName}(s) to Cart!`);
+        } else {
+            alert(`Added ${quantity} ${productName}(s) to Cart!`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add to Cart. Please try again.');
+    });
+}
+
+
+
+    function updateSelectedQuantity(productName, selectedQuantity) {
+        const selectedQuantitySpan = document.getElementById(`selectedQuantity_${productName}`);
+        selectedQuantitySpan.textContent = `Selected Quantity: ${selectedQuantity}`;
+    }
+
+    
+    function showFilter() {
+        const filterSection = document.getElementById('filter');
+        filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function applyFilters() {
+        const priceFilter = document.getElementById('priceFilter').value;
+        const materialFilter = document.getElementById('materialFilter').value;
+
+        const products = document.querySelectorAll('.product');
+
+        products.forEach(product => {
+            const price = parseFloat(product.getAttribute('data-price'));
+            const material = product.getAttribute('data-material');
+
+            const priceRange = getPriceRange(priceFilter);
+            const isPriceInRange = price >= priceRange[0] && price <= priceRange[1];
+            const isMaterialMatch = material === materialFilter || materialFilter === 'All';
+
+            if (isPriceInRange && isMaterialMatch) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
+
+    function getPriceRange(priceFilter) {
+        switch (priceFilter) {
+            case '0-20':
+                return [0, 20];
+            case '21-40':
+                return [21, 40];
+            case '41-60':
+                return [41, 60];
+            default:
+                return [0, Infinity];
+        }
+    }
+</script>
+
+</section>
+
+<footer>
+    <p>&copy; 2023 Wallpaper Store. All rights reserved.</p>
+</footer>
+
+<script>
+    function showFilter() {
+        const filterSection = document.getElementById('filter');
+        filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+    }
+
+    
+
+    function addToWishlist(productName) {
+        console.log(productName)
+    // Send an AJAX request to the Flask backend to add the product to the cart
+    fetch('/add_to_wishlist', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ product: productName }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Added ${productName} to wishlist!`);
+        } else {
+            alert(`Added ${productName} to wishlist!`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add to wishlist. Please try again.');
+    });
+    }
+
+    
+</script>
+
+</body>
+</html>

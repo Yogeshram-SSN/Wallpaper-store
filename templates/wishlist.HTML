@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* This ensures the body takes at least the full height of the viewport */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center; 
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        section#wishlist {
+            flex-grow: 1; /* This ensures that the wishlist section grows to fill the available space */
+            padding: 20px;
+        }
+
+        .wishlist-item {
+            display: flex;
+            border: 1px solid #ddd;
+            margin: 15px;
+            padding: 10px;
+        }
+
+        .wishlist-item img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .wishlist-item-details {
+            flex-grow: 1;
+        }
+
+        .wishlist-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .add-to-wishlist {
+            background-color: #1ac717;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        footer {
+            margin-top: auto; /* This pushes the footer to the bottom */
+            background-color: #000;
+            padding: 15px 0;
+            color: #FFF;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Wallpaper Store</h1>
+        <nav>
+            <ul>
+                <li><a href="/user_home">Home</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/wishlist">Wishlist</a></li>
+                <li><a href="#" onclick="showFilter()">Filter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="wishlist">
+        <h2>Your Wishlist</h2>
+        {% for item in wish_items %}
+        <div class="wishlist-item">
+            <img src="{{ base_url + item[0] + '.png' }}" alt="{{ item[1] }}">
+            <div class="wishlist-item-details">
+                <p>Wallpaper Name: {{ item[0] }}</p>
+                <p>Wallpaper Dimension: {{ item[1] }}</p>
+                <p>Price: {{ item[2] }}</p>
+            </div>
+            <button onclick="removeFromWishlist('{{ item[0] }}')" class="remove-button">Remove</button>
+        </div>
+        {% endfor %}
+    </section>
+
+    
+    <footer>
+        <p>&copy; 2023 Wallpaper Store. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showFilter() {
+            const filterSection = document.getElementById('filter');
+            filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        
+        function addToWishlist(productName) {
+            // Send an AJAX request to the Flask backend to add the product to the wishlist
+            fetch('/add_to_wishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'product': productName }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Add to Wishlist Response:', data);
+                if (data.success) {
+                    alert('Added to Wishlist!');
+                } else {
+                    alert('Failed to add to Wishlist. Check the console for details.');
+                    console.error('Failed to add to Wishlist:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add to Wishlist. Check the console for details.');
+            });
+        }
+
+        function removeFromWishlist(productName) {
+            // Send an AJAX request to the Flask backend to remove the product from the wishlist
+            fetch('/remove_from_wishlist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product: productName,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Remove from Wishlist Response:', data);
+                if (data.success) {
+                    // Assuming the server returns success: true if the removal is successful
+                    // Remove the item from the wishlist display
+                    const wishlistItem = document.querySelector(".wishlist-item img[alt='${productName}']");
+                    if (wishlistItem) {
+                        wishlistItem.closest('.wishlist-item').remove();
+                        alert('Item removed from Wishlist!');
+                    }
+                } else {
+                    alert('Failed to remove item from Wishlist. Check the console for details.');
+                    console.error('Failed to remove item from Wishlist:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to remove item from Wishlist. Check the console for details.');
+            });
+        }
+    </script>
+
+</body>
+
+</html>

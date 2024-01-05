@@ -1,0 +1,1 @@
+const removeButtons = document.querySelectorAll('.remove-btn');

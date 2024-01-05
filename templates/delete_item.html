@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Delete Item</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Delete Item</h2>
+        <form action="/delete_item" method="post">
+            <!-- Add your form fields for the item to be deleted here -->
+            <label for="wallpaper_name">Wallpaper Name:</label>
+            <input type="text" id="wallpaper_name" name="wallpaper_name" required>
+
+            <!-- Add more fields as needed -->
+            <br>
+            <br><button type="submit">Delete Item</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Add New Item</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Item</h2>
+        <form action="{{ url_for('add_item_post') }}" method="post">
+            <!-- Add your form fields for the new item here -->
+            <label for="wallpaper_id">Wallpaper ID:</label>
+            <input type="number" id="wallpaper_id" name="wallpaper_id" required>
+
+            <br><label for="wallpaper_name">Wallpaper Name:</label>
+            <input type = 'text' id="wallpaper_name" name="wallpaper_name" required>
+
+            <br><label for="dimensions">Dimensions:</label>
+            <input type = 'text' id="dimensions" name="dimensions" required>
+
+            <br><label for="material">Material:</label>
+            <input type = 'text' id="material" name="material" required>
+
+            <br><label for="price">Price:</label>
+            <input type = 'number' id="price" name="price" required>
+
+            <br><label for="availability">Availability:</label>
+            <input type = 'text' id="availability" name="availability" required>
+
+            <br><label for="manufacturer_id">Manufacturer ID:</label>
+            <input type = 'number' id="manufacturer_id" name="manufacturer_id" required>
+
+            <br><label for="manu_info">Manufacturer Information:</label>
+            <input type = 'text' id="manu_info" name="manu_info" required>
+
+            <br><label for="manu_contact">Manufacturer Contact:</label>
+            <input type = 'text' id="manu_contact" name="manu_contact" required>
+
+            <br><label for="warranty_id">Warranty ID:</label>
+            <input type = 'number' id="warranty_id" name="warranty_id" required>
+
+            <br><label for="warranty">Warranty:</label>
+            <input type = 'text' id="warranty" name="warranty" required>
+
+            <br><label for="image">Image:</label>
+            <select id="image" name="image" required>
+                <option value="Cloud Burst.png">Cloud Burst</option>
+                <option value="Crush Classic.png">Crush Classic</option>
+                <option value="Ledgestone Effect.png">Ledgestone Effect</option>
+                <option value="Stockholm Forest.png">Stockholm Forest</option>
+            </select>
+            
+
+            <!-- Add more fields as needed -->
+            <br>
+            <br><button type="submit">Add Item</button>
+        </form>
+    </div>
+</body>
+</html>
